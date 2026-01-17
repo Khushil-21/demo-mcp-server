@@ -21,7 +21,6 @@ uv sync
 ### Development Mode (Testing)
 
 To test the server with the MCP inspector in your browser, run:
-
 ```bash
 uv run fastmcp dev main.py
 ```
@@ -35,12 +34,10 @@ This will start the server in development mode and automatically open the MCP in
 ### Production Mode
 
 To run the server for production use:
-
 ```bash
 uv run fastmcp run main.py
 ```
 OR
-
 ```bash
 fastmcp run main.py
 ```
@@ -49,7 +46,6 @@ This will start the server and make it available for MCP clients to connect.
 ## Installing to Claude Desktop
 
 To add this local MCP server to Claude Desktop, run:
-
 ```bash
 uv run fastmcp install claude-desktop main.py
 ```
@@ -61,7 +57,6 @@ fastmcp install claude-desktop main.py
 This will configure Claude Desktop to use this MCP server. 
 
 **Note:** If `uv` is not in your system PATH, you may need to manually edit the Claude Desktop MCP configuration file and use the absolute path to `uv.exe` in the command. To find your UV installation path, use:
-
 ```bash
 Get-Command uv | Select-Object -ExpandProperty Source
 ```
@@ -69,6 +64,62 @@ Get-Command uv | Select-Object -ExpandProperty Source
 Then update the MCP server configuration in Claude Desktop's settings to use the absolute path (e.g., `C:\Users\Khushil\AppData\Local\Microsoft\WinGet\Links\uv.exe run fastmcp run main.py`).
 
 After installation, restart Claude Desktop to start using the server.
+
+## Running as a Remote Server
+
+To deploy your MCP server remotely and make it accessible over HTTP, follow these steps:
+
+### 1. Update Your Code for HTTP Transport
+
+Modify your `main.py` to use HTTP transport instead of stdio:
+```python
+# Instead of:
+# mcp.run()
+
+# Use:
+mcp.run(transport="http", host="0.0.0.0", port=8000)
+```
+
+### 2. Start the Remote Server
+
+Run the server with HTTP transport using one of these commands:
+```bash
+fastmcp run main.py --transport http --host 0.0.0.0 --port 8000
+```
+
+OR
+```bash
+uv run main.py
+```
+
+This will start your MCP server listening on HTTP at `http://0.0.0.0:8000`.
+
+### 3. Test with MCP Inspector
+
+Before deploying, test your remote server locally:
+
+1. Start the MCP inspector:
+```bash
+   fastmcp dev main.py
+```
+
+2. In the MCP inspector interface, change the connection type to **"Streamable HTTP"**
+
+3. Test all your tools to ensure they work correctly over HTTP
+
+### 4. Deploy to FastMCP Cloud
+
+Once you've tested your server locally:
+
+1. Push your code to a GitHub repository
+
+2. Connect your GitHub repository to [FastMCP Cloud](https://fastmcp.com)
+
+3. FastMCP Cloud will automatically deploy your MCP server and provide you with a public URL
+
+4. Use this URL to connect your remote MCP server to Claude Desktop or other MCP clients
+
+**Note:** When deploying remotely, ensure your server has proper security measures in place, especially if handling sensitive data.
 
 ## Available Tools
 

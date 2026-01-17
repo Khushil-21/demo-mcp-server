@@ -1,6 +1,7 @@
 import random 
 from typing import List
 from fastmcp import FastMCP
+from starlette.routing import Host
 
 mcp = FastMCP(name="demo-mcp-server")
 
@@ -15,4 +16,8 @@ def add_numbers(a: float, b: float) -> float:
     return a + b
 
 if __name__ == "__main__":
-    mcp.run()
+    # for local server 
+    # mcp.run()
+    
+    # for remote server 
+    mcp.run(transport="http",host="0.0.0.0",port=8000)
